@@ -1,0 +1,421 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CProduit
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x15a8fd27024602d8
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACjlbrhfUsXBs/c72oETyApwx1c7MiN8/tf0lNguKUPHyHMDjiDIDG9+DOTJCgGjV5XegoAIHQa3Cbl0AW4OMacFekcQ10UsPBMVopkrnpAUvNBIDtSkz5faDB1DG8Jv2y9rY8Zumz2CszuH0Q=
+     code : |1+
+      CProduit est une Classe
+      	m_nIDProduit est un entier sur 8 <MAPPING="IDProduit">
+      	m_sReference est une chaîne <MAPPING="Reference">
+      	m_sLibellé est une chaîne <MAPPING="LibelleProduit">
+      	m_sDescription est une chaîne <MAPPING="Description">
+      	m_bNouveauté est un booléen <MAPPING="Nouveau">
+      	m_bMeilleuresVentes est un booléen <MAPPING="MeilleuresVentes">
+      	m_nOrdreAffichage est un entier <MAPPING="OrdreAffichage">
+      	m_bPromotion est un booléen <MAPPING="Promotion">
+      	m_tabDeclinaison est un tableau de CDeclinaisonProduit dynamique
+      	m_pclFamille est un CFamilleProduit dynamique
+      	m_pclTauxTaxe est un CTauxTaxe dynamique
+      	m_nIDEnsembleCaractéristique est un entier sur 8 octets <MAPPING=IDEnsembleCaractéristique>
+      	m_taValeursPossibleCaractéristiques est un tableau associatif de chaînes
+      	m_taValeursPossibleAffichéesCaractéristiques est un tableau associatif de chaînes
+      	
+      FIN
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 1560775614867636952
+     type_code : 27
+     code : |1+
+      PROCÉDURE Constructeur()
+      
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 1560775614867702488
+     type_code : 28
+     code : |1+
+      PROCÉDURE Destructeur()
+      
+     type : 655360
+   -
+     name : ChargeInfo
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1561827211810378083
+     type_code : 12
+     code : |1-
+      // Résumé : Lit les infos depuis la base de données
+      
+      PROCÉDURE ChargeInfo( coOption est un COMB_OperationProduit )
+      
+      // Chargement du taux de taxe
+      m_pclTauxTaxe = allouer un CTauxTaxe(Produit.IDTauxTaxe)
+      m_pclTauxTaxe.ChargeInfo()
+      
+      
+      // Chargement de la description de base du produit
+      SI coOption[ChargeDescription] ALORS
+      	HLitRecherchePremier(Produit,IDProduit,m_nIDProduit)
+      	FichierVersMémoire(objet,Produit)
+      FIN
+      
+      // Chargement des déclinaisons
+      SI coOption[ChargeDeclinaison] ALORS
+      	_ChargeDéclinaisons(coOption)	
+      FIN
+      
+      // Chargement de la famille de produit
+      SI coOption[ChargeFamille] ALORS
+      	m_pclFamille = allouer un CFamilleProduit()
+      	m_pclFamille.ChargeInfo(Produit.IDFamilleProduit)
+      FIN
+      
+      // Charge la liste des valeurs possible par caractéristiques
+      POUR TOUT Caractéristique_EnsembleCaractéristique AVEC IDEnsembleCaractéristique = m_nIDEnsembleCaractéristique
+      	// Ajoute la liste des valeurs possibles au tableau
+      	m_taValeursPossibleCaractéristiques[Caractéristique_EnsembleCaractéristique.IDCaractéristique] = Caractéristique_EnsembleCaractéristique.ValeursPossibles
+      	m_taValeursPossibleAffichéesCaractéristiques[Caractéristique_EnsembleCaractéristique.IDCaractéristique] = Caractéristique_EnsembleCaractéristique.ValeursAffichéesPossible
+      FIN
+      
+      CAS ERREUR:
+      	ErreurPropage()
+      	RETOUR
+     type : 458752
+   -
+     name : pclDeclinaisonDefaut
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1561847990866208449
+     type_code : 12
+     code : |1+
+      // Résumé : Retourne la déclinaison par défaut d'un produit
+      
+      PROCÉDURE pclDeclinaisonDefaut() : CDeclinaisonProduit
+      
+      RENVOYER m_tabDeclinaison[nRangDeclinaisonDefaut()]
+      
+      CAS ERREUR:
+      	ErreurPropage()
+      	RENVOYER Null
+      
+     type : 458752
+   -
+     name : pclDeclinaisonParRang
+     procedure_id : 1581584559656628562
+     type_code : 12
+     code : |1+
+      // Résumé : Retourne la déclinaison d'un produit selon son rang
+      
+      PROCÉDURE pclDeclinaisonParRang( nRang est un entier )
+      
+      RENVOYER m_tabDeclinaison[nRang]
+      
+     type : 458752
+   -
+     name : pclDeclinaisonParId
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1581586552614324337
+     type_code : 12
+     code : |1-
+      // Résumé : Retourne la déclinaison d'un produit selon son ID
+      
+      PROCÉDURE pclDeclinaisonParId( nID est un entier sur 8 octets )
+      
+      // Variables locales
+      nRangDeclinaison est un entier
+      
+      // On vérifie que les déclinaisons sont chargées
+      SI m_tabDeclinaison..Occurrence = 0 ALORS RENVOYER Null
+      
+      // On recherche la déclinaison
+      nRangDeclinaison  = nRangDeclinaisonParId(nID)
+      SI nRangDeclinaison<=0 ALORS RENVOYER Null
+      
+      // On renvoie la déclinaison
+      RENVOYER m_tabDeclinaison[nRangDeclinaison]
+      
+      
+      CAS ERREUR:
+      	ErreurPropage()
+      	RENVOYER Null
+      	
+     type : 458752
+   -
+     name : nRangDeclinaisonDefaut
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1581595713824428927
+     type_code : 12
+     code : |1+
+      // Résumé : Renvoie le rang de la déclinaison par défaut
+      
+      PROCÉDURE nRangDeclinaisonDefaut()
+      
+      SI m_tabDeclinaison..Occurrence=0 ALORS
+      	// On charge les déclinaisons
+      	_ChargeDéclinaisons()
+      	ErreurDéclenche(1,"Le tableau des déclinaisons est vide. Les déclinaisons n'ont peut-être pas été chargées ?")
+      	RENVOYER 0
+      FIN
+      
+      nRang est un entier = Cherche(m_tabDeclinaison,tcLinéaire,"m_bParDéfaut",Vrai)
+      SI nRang>0 ALORS
+      	RENVOYER nRang
+      FIN
+      
+      ErreurDéclenche(2,"Il n'y a pas de déclinaison par défaut pour ce produit.")
+      RENVOYER 0
+      
+      CAS ERREUR:
+      ErreurPropage()
+      RENVOYER Null
+     type : 458752
+   -
+     name : nRangDeclinaisonParId
+     procedure_id : 1581596018767177600
+     type_code : 12
+     code : |1+
+      // Résumé : Renvoie le rang de la déclinaison selon sont ID
+      
+      PROCÉDURE nRangDeclinaisonParId( nID est un entier sur 8 octets )
+      
+      nRang est un entier = Cherche(m_tabDeclinaison,tcLinéaire,"m_nIDDeclinaison",nID)
+      
+      RENVOYER nRang
+     type : 458752
+   -
+     name : pclTrouveDeclinaisonParCarac
+     procedure_id : 1582632858024855798
+     type_code : 12
+     code : |1-
+      // Résumé : Renvoie une déclinaison selon ses caractéristiques
+      
+      PROCÉDURE pclTrouveDeclinaisonParCarac( sChaineCarac est une chaîne )
+      
+      pclDeclinaison est un  CDeclinaisonProduit dynamique
+      
+      POUR TOUT pclDeclinaison DE m_tabDeclinaison
+      	SI pclDeclinaison.sChaineCaractéristiques()=sChaineCarac ALORS
+      		RENVOYER pclDeclinaison
+      	FIN
+      FIN
+      
+      RENVOYER Null
+     type : 458752
+   -
+     name : _ChargeDéclinaisons
+     procedure_id : 1583724810563100060
+     type_code : 12
+     code : |1-
+      // Résumé : Chargement des déclinaisons
+      
+      PROCÉDURE _ChargeDéclinaisons(coOption est une COMB_OperationProduit = 0)
+      
+      POUR TOUT DéclinaisonProduit AVEC IDProduit = m_nIDProduit
+      	clDeclinaison est un CDeclinaisonProduit(objet,DéclinaisonProduit.IDDéclinaisonProduit)
+      	clDeclinaison.ChargeInfo(coOption)
+      	Ajoute(m_tabDeclinaison,clDeclinaison)
+      FIN
+     type : 458752
+   -
+     name : RechercheDéclinaisonAyantCaractéristiques
+     procedure_id : 1609339707790954474
+     type_code : 12
+     code : |1-
+      // Résumé : Recherche une déclinaison ayant un ensemble de caractéristique ou sinon la plus adapté
+      
+      PROCÉDURE RechercheDéclinaisonAyantCaractéristiques(tabCaractéristique est un tableau d'entiers sur 8 octets, sNomCaractéristiquePrincipale est une chaîne)
+      
+      // Variables locales
+      nIndiceDeclinaison 		est un entier
+      nIndiceCaractéristique 	est un entier
+      pclDeclinaisonEnCours 	est un CDeclinaisonProduit dynamique
+      bTrouvé					est un booléen
+      
+      // On parcours le produit et ses déclinaisons
+      POUR nIndiceDeclinaison = 1 _À_ m_tabDeclinaison..Occurrence
+      
+      	// On se positionne sur la déclinaison
+      	pclDeclinaisonEnCours = m_tabDeclinaison[nIndiceDeclinaison]	
+      	
+      	// On vérifie que cette déclinaison à le même nombre de caractéristique que la demande
+      	SI  pclDeclinaisonEnCours.m_tabCaracteristique..Occurrence = tabCaractéristique..Occurrence ALORS
+      		
+      		// Par défaut, on considère la déclinaison comme la bonne
+      		bTrouvé = Vrai
+      		POUR nIndiceCaractéristique = 1 _À_ tabCaractéristique..Occurrence
+      			// On vérifie que la déclinaison possède la caractéristique
+      			SI pclDeclinaisonEnCours.bPossèdeCaractéristique(tabCaractéristique[nIndiceCaractéristique]) = Faux ALORS
+      				// Au moins ne correspond pas
+      				bTrouvé = Faux
+      			FIN
+      		FIN
+      	
+      		// Aucune caractéristique n'a pas été trouvé : c'est la bonne déclinaison
+      		SI bTrouvé = Vrai ALORS
+      			// On a trouvé la déclinaison
+      			RENVOYER pclDeclinaisonEnCours
+      			
+      		FIN
+      	FIN	
+      FIN
+      
+      // Si on arrive ici, c'est que l'on n'a pas trouvé une déclinaison ayant toutes les caractéristiques
+      // On prend alors la caractéristiques "principale" de l'objet
+      // On parcours le produit et ses déclinaisons
+      POUR nIndiceDeclinaison = 1 _À_ m_tabDeclinaison..Occurrence
+      	// On se positionne sur la déclinaison
+      	pclDeclinaisonEnCours = m_tabDeclinaison[nIndiceDeclinaison]
+      	
+      	// On vérifie si cette déclinaison à au moins la caractéristique principale
+      	POUR nIndiceCaractéristique = 1 _À_ tabCaractéristique..Occurrence
+      		// On vérifie que la déclinaison possède la caractéristique
+      		SI pclDeclinaisonEnCours.bPossèdeCaractéristique(tabCaractéristique[nIndiceCaractéristique],sNomCaractéristiquePrincipale) = Vrai ALORS
+      			// On a trouvé la déclinaison
+      			RENVOYER pclDeclinaisonEnCours		
+      		FIN
+      	FIN
+      FIN
+      
+      // Déclinaison non trouvée
+      RENVOYER Null
+     type : 458752
+   -
+     name : ChargeDepuisBase
+     procedure_id : 1609339750740703189
+     type_code : 12
+     code : |1+
+      // Résumé : Charge les informations du produit depuis la base de données
+      
+      PROCÉDURE ChargeDepuisBase(nIDProduit est un entier sur 8 octets, nIDDéclinaison est un entier sur 8 octets)
+      
+      // Variables locales
+      nIDDéclinaisonEnCours est un entier sur 8 octets
+      
+      // Chargement du produit et de ses déclinaisons
+      HLitRecherchePremier(Produit,IDProduit,nIDProduit)
+      dbgAssertion(Faux,"Produit non trouvé en base")
+      
+      // On charge les informations
+      FichierVersMémoire(objet,Produit)
+      ChargeInfo(ChargeDeclinaison+ChargeDescription+ChargeImages+ChargeFamille)
+      
+      // On vérifie que la déclinaison mémorisée appartient toujours au produit demandé
+      SI pclDeclinaisonParId(nIDDéclinaison) = Null _OU_ nIDDéclinaison = 0  ALORS
+      	// On doit rechercher la déclinaison par défaut de ce produit
+      	pclDeclinaisonDefaut est un CDeclinaisonProduit dynamique = DeclinaisonDefaut
+      	
+      
+      	// On devra rechercher la déclinaison par défaut de ce produit
+      	nIDDéclinaisonEnCours = pclDeclinaisonDefaut.m_nIDDeclinaison
+      SINON
+      	nIDDéclinaisonEnCours = nIDDéclinaison
+      FIN
+      
+      RENVOYER nIDDéclinaisonEnCours
+     type : 458752
+   -
+     name : GetLibelleFamille
+     procedure_id : 1609348757398534167
+     type_code : 12
+     code : |1-
+      // Résumé : Renvoie le libellé de la famille de produit
+      
+      PROCÉDURE GetLibelleFamille()
+      
+      SI m_pclFamille = Null ALORS RENVOYER ""
+      
+      RENVOYER m_pclFamille.m_sLibelleFamille
+     type : 458752
+   -
+     name : ChargeDepuisBaseSelonDeclinaison
+     procedure_id : 1614556031452891255
+     type_code : 12
+     code : |1+
+      // Résumé : Charge les informations du produit depuis la base de données
+      
+      PROCÉDURE ChargeDepuisBaseSelonDeclinaison(nIDDéclinaison est un entier sur 8 octets)
+      
+      // Variables locales
+      nIDDéclinaisonEnCours est un entier sur 8 octets
+      
+      // Chargement du produit et de ses déclinaisons
+      HLitRecherchePremier(DéclinaisonProduit,IDDéclinaisonProduit,nIDDéclinaison)
+      dbgAssertion(HTrouve(DéclinaisonProduit),"Déclinaison non trouvé en base")
+      
+      // Chargement du produit et de ses déclinaisons
+      HLitRecherchePremier(Produit,IDProduit,DéclinaisonProduit.IDProduit)
+      dbgAssertion(HTrouve(Produit),"Produit non trouvé en base")
+      
+      // On charge les informations
+      FichierVersMémoire(objet,Produit)
+      ChargeInfo(ChargeDeclinaison+ChargeDescription+ChargeImages+ChargeFamille)
+      
+      // On vérifie que la déclinaison mémorisée appartient toujours au produit demandé
+      SI pclDeclinaisonParId(nIDDéclinaison) = Null _OU_ nIDDéclinaison = 0  ALORS
+      	// On doit rechercher la déclinaison par défaut de ce produit
+      	pclDeclinaisonDefaut est un CDeclinaisonProduit dynamique = DeclinaisonDefaut
+      	
+      
+      	// On devra rechercher la déclinaison par défaut de ce produit
+      	nIDDéclinaisonEnCours = pclDeclinaisonDefaut.m_nIDDeclinaison
+      SINON
+      	nIDDéclinaisonEnCours = nIDDéclinaison
+      FIN
+      
+      RENVOYER nIDDéclinaisonEnCours
+     type : 458752
+  properties :
+   -
+     name : p_NbDeclinaison
+     identifier : 0x15f2ea55042eb46f
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCÉDURE PUBLIQUE p_NbDeclinaison()
+         
+         RENVOYER m_tabDeclinaison..Occurrence
+        type : 1966080
+     template_refs : []
+   -
+     name : DeclinaisonDefaut
+     identifier : 0x15fa84b10395a6b8
+     type_code : 103
+     p_codes :
+      -
+        code : |1+
+         PROCÉDURE PUBLIQUE DeclinaisonDefaut()
+         
+         // On renvoie la déclinaison par défaut
+         RENVOYER m_tabDeclinaison[nRangDeclinaisonDefaut()]
+        type : 1966080
+      -
+        code : |1-
+         PROCÉDURE PUBLIQUE DeclinaisonDefaut(Valeur)
+         
+         dbgAssertion(Faux,"Impossible de modifier la déclinaison par défaut")
+        type : 2031616
+     template_refs : []
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x1fce60bc003fcdce
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

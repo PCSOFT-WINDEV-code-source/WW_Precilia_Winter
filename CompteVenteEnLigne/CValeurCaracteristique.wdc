@@ -1,0 +1,86 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CValeurCaracteristique
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x15f2e4d204062e5d
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     code : |1+
+      CValeurCaracteristique est une Classe
+      	m_nIDValeurCaractéristique est un entier sur 8 octets <MAPPING="IDValeurCaractéristique">
+      	m_sValeurAffichage est une chaîne <MAPPING="ValeurAffichage">
+      	m_sValeur est une chaîne <MAPPING="Valeur">
+      	
+      	m_pclCaracteristique est un CCaractéristique dynamique 
+      FIN
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 1581578009822309981
+     type_code : 27
+     code : |1+
+      PROCÉDURE Constructeur()
+      
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 1581578009822375517
+     type_code : 28
+     code : |1+
+      PROCÉDURE Destructeur()
+      
+     type : 655360
+   -
+     name : ChargeInfo
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1581579560305798895
+     type_code : 12
+     code : |1-
+      // Résumé : Charge les informations en base
+      
+      PROCÉDURE ChargeInfo( nIDValeurCaractéristique est un entier sur 8 octets )
+      
+      HLitRecherchePremier(ValeurCaractéristique,IDValeurCaractéristique,nIDValeurCaractéristique)
+      FichierVersMémoire(objet,ValeurCaractéristique)
+      
+      m_pclCaracteristique = allouer un CCaractéristique
+      m_pclCaracteristique.ChargeInfo(ValeurCaractéristique.IDCaractéristique)
+      
+      CAS ERREUR:
+      	ErreurPropage()
+      	RETOUR
+     type : 458752
+   -
+     name : GetNomCaractéristique
+     procedure_id : 1609329730505613191
+     type_code : 12
+     code : |1+
+      // Résumé : Renvoie le nom de la caractéristique associé
+      
+      PROCÉDURE GetNomCaractéristique()
+      
+      SI m_pclCaracteristique = Null ALORS RENVOYER ""
+      
+      RENVOYER m_pclCaracteristique.m_sNom
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x1fce60bc001dcd9f
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

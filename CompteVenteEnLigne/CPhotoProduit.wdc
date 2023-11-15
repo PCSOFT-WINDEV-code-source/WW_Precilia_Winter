@@ -1,0 +1,116 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CPhotoProduit
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x15acbab9008e8de3
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     code : |1+
+      
+      
+      CPhotoProduit est une Classe
+      	m_nIDPhoto est un entier sur 8 <MAPPING="IDPhotoProduit">
+      	m_pclProduitAssocié est un CProduit dynamique
+      	m_pclDeclinaisonAssociée est un CDeclinaisonProduit dynamique
+      
+      	m_nOrdreAffichage est un entier <MAPPING="OrdreAffichage">
+      	m_coRole est une COMB_RolePhoto
+      	m_sCheminPhoto est un chaîne <MAPPING="Photo">
+      FIN
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 1561828474531843555
+     type_code : 27
+     code : |1+
+      PROCÉDURE Constructeur( nIDPhoto est un entier sur 8 = 0 )
+      
+      m_nIDPhoto = nIDPhoto
+      
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 1561828474531909091
+     type_code : 28
+     code : |1+
+      PROCÉDURE Destructeur()
+      
+     type : 655360
+   -
+     name : ChargeInfo
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1561846882763208183
+     type_code : 12
+     code : |1-
+      // Résumé : Lit les infos depuis la base de données
+      // Syntaxe :
+      //ChargeInfo ( [<pclDeclinaison> est CDeclinaisonProduit dynamique])
+      //
+      // Paramètres :
+      //	pclDeclinaison (CDeclinaisonProduit dynamique - valeur par défaut=0) : <indiquez ici le rôle de pclDeclinaison>
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //// Traitement automatique des erreurs :   exécuter le bloc de code CAS ERREUR
+      //
+      
+      PROCÉDURE ChargeInfo( pclDeclinaison est un CDeclinaisonProduit dynamique = Null )
+      
+      m_pclDeclinaisonAssociée = pclDeclinaison
+      SI pclDeclinaison<>Null ALORS m_pclProduitAssocié = pclDeclinaison.m_pclProduitAssocié
+      
+      HLitRecherchePremier(PhotoProduit,IDPhotoProduit,m_nIDPhoto)
+      FichierVersMémoire(objet,PhotoProduit)
+      
+      m_coRole = CombinaisonDepuisValeur(COMB_RolePhoto,PhotoProduit.Role)
+      
+      
+      CAS ERREUR:
+      ErreurPropage()
+      RETOUR
+     type : 458752
+   -
+     name : bRole
+     procedure_id : 1561851894992520663
+     type_code : 12
+     code : |1+
+      // Résumé : Vérifie si le rôle de la photo correspond au rôle demandé
+      // Syntaxe :
+      //[ <Résultat> = ] bRole (<coRole> est combinaison)
+      //
+      // Paramètres :
+      //	coRole (combinaison) : <indiquez ici le rôle de coRole>
+      // Valeur de retour :
+      // 	Type indéterminé : // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCÉDURE bRole( coRole est un COMB_RolePhoto )
+      
+      RENVOYER m_coRole[coRole]
+      
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x1fce60bc0029cdaf
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

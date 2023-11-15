@@ -1,0 +1,168 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_GestionProduit
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x15a921ef02e7ae82
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  type_code : 31
+  p_codes :
+   -
+     code : |1+
+      COMB_OperationProduit est une Combinaison
+      	ChargeDescription
+      	ChargeDeclinaison
+      	ChargeImages
+      	ChargeFamille
+      FIN
+      
+      COMB_RolePhoto est une Combinaison
+      	Photo_Defaut = 1
+      	Photo_Avant =2
+      	Photo_CôtéGauche = 4
+      	Photo_CôtéDroit = 8
+      	Photo_Arrière = 16
+      	Photo_Dessus = 32
+      	Photo_Dessous = 64
+      	Photo_Utilisation = 128
+      FIN
+      
+      ENUM_TypeCaractéristique est une Enumération
+      	CARAC_Entier
+      	CARAC_Chaine
+      	CARAC_Couleur
+      	CARAC_Sexe
+      FIN
+     type : 720896
+  procedures :
+   -
+     name : PRODUIT_Liste
+     procedure_id : 1560816125009784332
+     type_code : 15
+     code : |1-
+      // Résumé : Retourne un tableau des N premiers produits, classés par ordre d'affichage
+      // Syntaxe :
+      //[ <Résultat> = ] PRODUIT_Liste ( [<nOption> est combinaison [, <nNombreMax> est entier [, <nIDCatégorie> est entier sur 8 octets]]])
+      //
+      // Paramètres :
+      //	nOption (combinaison) : <indiquez ici le rôle de nOption>
+      //	nNombreMax (entier - valeur par défaut=-1) : <indiquez ici le rôle de nNombre>
+      //	nIDCatégorie (entier sur 8 octets - valeur par défaut=-1) : <indiquez ici le rôle de nIDCatégorie>
+      // Valeur de retour :
+      // 	tableau : // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCÉDURE PRODUIT_Liste( nOption est une COMB_OperationProduit = ChargeDescription, nNombreMax est un entier = -1, nIDCatégorie est un entier sur 8 = -1)
+      
+      clProd est un CProduit dynamique
+      
+      // Définition du TOP de la requête
+      SI nNombreMax=-1 ALORS
+      	REQ_ListeProduit.pNombre = Null
+      SINON
+      	REQ_ListeProduit.pNombre = nNombreMax
+      FIN
+      
+      SI nIDCatégorie <> -1 ALORS
+       	REQ_ListeProduit.pIDFamille = nIDCatégorie
+      SINON
+       	REQ_ListeProduit.pIDFamille = Null
+      FIN
+      
+      
+      // Exécution de la requête et construction du tableau des objets résultat
+      HExécuteRequête(REQ_ListeProduit)
+      
+      tabProd est un tableau de CProduit
+      FichierVersTableau(tabProd,REQ_ListeProduit)
+      
+      SI nOption<>0 ALORS
+      	POUR TOUT clProd DE tabProd
+      		clProd.ChargeInfo(nOption)
+      	FIN
+      FIN
+      
+      RENVOYER tabProd
+     type : 458752
+   -
+     name : FAMILLE_Liste
+     procedure_id : 1583768623538555489
+     type_code : 15
+     code : |1-
+      // Résumé : <indiquez ici ce que fait la procédure>
+      // Syntaxe :
+      //[ <Résultat> = ] FAMILLE_Liste ( [<nIDCatégorieParente> est entier sur 8 octets])
+      //
+      // Paramètres :
+      //	nIDCatégorieParente (entier sur 8 octets - valeur par défaut=-1) : < indiquez ici le rôle de bRecursif >
+      // Valeur de retour :
+      // 	tableau : // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCÉDURE FAMILLE_Liste(nIDCatégorieParente est un entier sur 8 = -1)
+      
+      tabCatégorie est un tableau  de CFamilleProduit
+      SI nIDCatégorieParente = -1 ALORS
+      	REQ_FamilleProduit.pIDFamilleParente = Null
+      SINON
+      	REQ_FamilleProduit.pIDFamilleParente = nIDCatégorieParente
+      FIN
+      
+      // Pour l'instant on ne trie que sur le libellé
+      REQ_FamilleProduit.pRubriqueTri = "LibelleFamille"
+      
+      
+      HExécuteRequête(REQ_FamilleProduit)
+      
+      FichierVersTableau(tabCatégorie,REQ_FamilleProduit)
+      
+      RENVOYER tabCatégorie
+     type : 458752
+   -
+     name : CATEGORIE_Liste1
+     procedure_id : 1583770268511544036
+     type_code : 15
+     code : |1-
+      // Résumé : <indiquez ici ce que fait la procédure>
+      // Syntaxe :
+      //[ <Résultat> = ] CATEGORIE_Liste ( [<nIDCatégorieParente> est entier sur 8 octets])
+      //
+      // Paramètres :
+      //	nIDCatégorieParente (entier sur 8 octets - valeur par défaut=-1) : < indiquez ici le rôle de bRecursif >
+      // Valeur de retour :
+      // 	tableau associatif : // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCÉDURE CATEGORIE_Liste1(nIDCatégorieParente est un entier sur 8 = -1 )
+      
+      taCatégorie est un tableau associatif de chaînes
+      POUR TOUT FamilleProduit AVEC IDFamilleProduitParente = nIDCatégorieParente
+      	// 
+      	taCatégorie[FamilleProduit.LibelleFamille] = FamilleProduit.IDFamilleProduit
+      FIN
+      
+      RENVOYER taCatégorie
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_SansNom1
+resources :
+ string_res :
+  identifier : 0x1fce60bc007fce0c
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

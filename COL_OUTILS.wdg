@@ -1,0 +1,61 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_OUTILS
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x164f2f340d97b3bd
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  type_code : 31
+  p_codes : []
+  procedures :
+   -
+     name : TexteTronque
+     procedure_id : 1607555518377282740
+     type_code : 15
+     code : |1-
+      // Résumé : <indiquez ici ce que fait la procédure>
+      // Syntaxe :
+      //[ <Résultat> = ] TexteTronque (<sTexte> est chaîne, <nTaille> est entier)
+      //
+      // Paramètres :
+      //	sTexte (chaîne ANSI) :<indiquez ici le rôle de sTexte>
+      //	nTaille (entier) :<indiquez ici le rôle de nTaille>
+      // Valeur de retour :
+      // 	chaîne ANSI : // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE TexteTronque(local sTexte est une chaine, local nTaille est un entier)
+      
+      	si taille(sTexte) > nTaille ALORS
+      		sTexte = sTexte[[a nTaille]]
+      		tantque CaractType(sTexte[[taille(sTexte)]]) & ctLettre
+      			sTexte = sTexte[[A taille(sTexte) - 1]]
+      		FIN
+      		
+      		sTexte = SansEspace(sTexte)
+      		sTexte += "..."
+      	FIN
+      	
+      	
+      	
+      renvoyer sTexte
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_SansNom1
+resources :
+ string_res :
+  identifier : 0x10ed8bd812a974ed
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

@@ -1,0 +1,425 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CDeclinaisonProduit
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x15a8fe58024da6f4
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     code : |1+
+      CDeclinaisonProduit est une Classe
+      	m_nIDDeclinaison est un entier sur 8 <MAPPING="IDDéclinaisonProduit">
+      	m_pclProduitAssocié est un CProduit dynamique
+      	m_bParDéfaut est un booléen <MAPPING="ParDéfaut">
+      	m_nQuantitéStock est un entier <MAPPING="Quantité">
+      	m_moPUHT est un monétaire <MAPPING="PrixUnitaireHT">
+      	m_sDescription est une chaîne <MAPPING="Description">
+      	m_sLibelle est une chaîne <MAPPING="LibelleDeclinaison">
+      	
+      	m_tabPhoto est un tableau de CPhotoProduit
+      	
+      	
+      	// Valeur des caractéristiques de la déclinaison
+      	// La clé est le rang de la caractéristique dans CCaractéristique::ms_taCaractéristique
+      	// La valeur est la valeur de l'instance
+      	m_tabCaracteristique est un tableau de CValeurCaracteristique
+      	
+      	
+      FIN
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 1560776924833162996
+     type_code : 27
+     code : |1+
+      PROCÉDURE Constructeur( pclProduit est un CProduit dynamique = Null, nIDDeclinaison est un entier sur 8 = -1 )
+      
+      // Produit de base de la déclinaison
+      m_pclProduitAssocié <- pclProduit
+      m_nIDDeclinaison = nIDDeclinaison
+      
+      SI nIDDeclinaison<>-1 _ET_ pclProduit=Null ALORS
+      	m_pclProduitAssocié = pclTrouveProduit()
+      	
+      FIN
+      
+      
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 1560776924833228532
+     type_code : 28
+     code : |1+
+      PROCÉDURE Destructeur()
+      
+     type : 655360
+   -
+     name : ChargeInfo
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1561844816883589098
+     type_code : 12
+     code : |1+
+      // Résumé : Lit les infos depuis la base de données
+      
+      PROCÉDURE ChargeInfo( coOption est un COMB_OperationProduit = 0 )
+      
+      // Lecture du fichier
+      HLitRecherchePremier(DéclinaisonProduit,IDDéclinaisonProduit,m_nIDDeclinaison)
+      FichierVersMémoire(objet,DéclinaisonProduit)
+      
+      // Chargement des caractéristiques
+      SupprimeTout(m_tabCaracteristique)
+      POUR TOUT DéclinaisonProduit_ValeurCaractéristique  AVEC IDDéclinaisonProduit = m_nIDDeclinaison
+      	cValCarac est un CValeurCaracteristique
+      	cValCarac.ChargeInfo(DéclinaisonProduit_ValeurCaractéristique.IDValeurCaractéristique)
+      	Ajoute(m_tabCaracteristique,cValCarac)
+      FIN
+      
+      // Chargement des images associées
+      SI coOption[ChargeImages] ALORS
+      	SupprimeTout(m_tabPhoto)
+      	POUR TOUT PhotoProduit AVEC IDDéclinaisonProduit = m_nIDDeclinaison
+      		clPhoto est un CPhotoProduit(PhotoProduit.IDPhotoProduit)
+      		clPhoto.ChargeInfo(objet)
+      		Ajoute(m_tabPhoto,clPhoto)
+      	FIN
+      FIN
+      
+      
+      CAS ERREUR:
+      ErreurPropage()
+      RETOUR
+     type : 458752
+   -
+     name : pclTrouvePhoto
+     internal_properties : CAAAAAgAAABUHz8hVhFi02/J7EhBrMlSNO0MeAqWBppfCjnxm/4kgJdm7XWgB5T6wjMexC1lxpG0E9/miOIxDqpCyq3t86PoLtBkATH/1oB8x09XjEnNP/qUDpwcbSPg0NLupmnY36w8JgJ/5axk6CsPJRVV4Ib+UFiKlFTTIkF739C1c2Up+mtV1Q==
+     procedure_id : 1561848909989488829
+     type_code : 12
+     code : |1-
+      // Résumé : Trouve une photo de la déclinaison correspondant à un rôle donné
+      
+      PROCÉDURE pclTrouvePhoto( coRole est un COMB_RolePhoto ) : CPhotoProduit
+      
+      clPhoto est un CPhotoProduit dynamique
+      POUR TOUT clPhoto DE m_tabPhoto
+      	SI clPhoto.bRole(coRole) ALORS
+      		RENVOYER clPhoto
+      	FIN
+      FIN
+      
+      // Aucune photo ne correspond au rôle recherché
+      RENVOYER Null
+      
+      CAS ERREUR:
+      	ErreurPropage()
+      	RENVOYER Null
+     type : 458752
+   -
+     name : sChaineCaractéristiques
+     procedure_id : 1582625543693520405
+     type_code : 12
+     code : |1+
+      // Résumé : Signature de la déclinaison basée sur la liste des 
+      
+      PROCÉDURE sChaineCaractéristiques()
+      
+      sChaineCarac est une chaîne
+      
+      POUR TOUT clCarac DE m_tabCaracteristique
+      	sChaineCarac += ["|"] + clCarac.m_sValeur
+      FIN
+      
+      RENVOYER sChaineCarac
+     type : 458752
+   -
+     name : pclTrouveProduit
+     procedure_id : 1582727364695133162
+     type_code : 12
+     code : |1+
+      // Résumé : Renvoie le produit associé à la déclinaison
+      
+      PROCÉDURE pclTrouveProduit()
+      
+      SI HLitRecherchePremier(DéclinaisonProduit,IDDéclinaisonProduit,m_nIDDeclinaison) ALORS
+      	m_pclProduitAssocié = allouer un CProduit()
+      	m_pclProduitAssocié.m_nIDProduit = DéclinaisonProduit.IDProduit
+      	m_pclProduitAssocié.ChargeInfo(ChargeDescription)
+      	RENVOYER m_pclProduitAssocié
+      FIN
+      
+      RENVOYER Null
+      
+     type : 458752
+   -
+     name : CaractéristiquesVersChaine
+     procedure_id : 1583828851975111570
+     type_code : 12
+     code : |1-
+      // Résumé : Renvoie une chaine identifiant les caractéristiques
+      
+      PROCÉDURE CaractéristiquesVersChaine(bAvecLibellé = Vrai, sSéparateur = ", ")
+      
+      
+      sChaineCarac est une chaîne
+      
+      POUR TOUT clCarac DE m_tabCaracteristique
+      	sChaineCarac += [sSéparateur]
+      	
+      	SI bAvecLibellé ALORS
+      		sChaineCarac += PremièreLettreEnMaj(clCarac.m_pclCaracteristique.m_sNom) + " : " 
+      	FIN
+      	
+      	sChaineCarac += PremièreLettreEnMaj(clCarac.m_sValeurAffichage) +[" "] + clCarac.m_pclCaracteristique.m_sUnite
+      	
+      FIN
+      
+      RENVOYER sChaineCarac
+     type : 458752
+   -
+     name : bPossèdeCaractéristique
+     procedure_id : 1609092141487491119
+     type_code : 12
+     code : |1-
+      // Résumé : Test si la déclinaison possède une caractéristique
+      
+      PROCÉDURE bPossèdeCaractéristique(nIDValeurCaractéristiqueRecherchée est un entier sur 8 octets, sNomCaractéristiqueRecherchée est une chaîne = "")
+      
+      // Variables locales
+      nIndice 					est un entier
+      pclValeurCaractéristique 	est un CValeurCaracteristique dynamique
+      
+      // Parcours des caractéristiques
+      POUR nIndice = 1 _À_ m_tabCaracteristique..Occurrence
+      	
+      	// On se positionne sur la caractéristique en cours
+      	pclValeurCaractéristique = m_tabCaracteristique[nIndice]
+      	
+      	// On vérifie sa valeur
+      	SI pclValeurCaractéristique.m_nIDValeurCaractéristique = nIDValeurCaractéristiqueRecherchée ALORS
+      		// On vérifie le nom si demandé
+      		SI sNomCaractéristiqueRecherchée<>"" ALORS
+      			// C'est la bonne caractéristique
+      			SI pclValeurCaractéristique.GetNomCaractéristique() ~=sNomCaractéristiqueRecherchée ALORS
+      				RENVOYER Vrai				
+      					
+      			FIN
+      		SINON
+      			// Juste la valeur suffit
+      			RENVOYER Vrai
+      		FIN
+      		
+      		
+      	FIN
+      FIN
+      
+      RENVOYER Faux
+     type : 458752
+   -
+     name : GetIDValeurCaracteristiqueSelonNom
+     procedure_id : 1609331680421546739
+     type_code : 12
+     code : |1+
+      // Résumé : Récupère l'identifiant d'une caractéristique selon son nom
+      
+      PROCÉDURE GetIDValeurCaracteristiqueSelonNom(sNomCaractéristiqueRecherchée est une chaîne)
+      
+      // Variables locales
+      nIndice 					est un entier
+      pclValeurCaractéristique 	est un CValeurCaracteristique dynamique
+      
+      // Parcours des caractéristiques
+      POUR nIndice = 1 _À_ m_tabCaracteristique..Occurrence
+      		
+      		// On se positionne sur la caractéristique
+      		pclValeurCaractéristique = m_tabCaracteristique[nIndice]
+      		
+      		// On la compare
+      		SI pclValeurCaractéristique.GetNomCaractéristique() ~=sNomCaractéristiqueRecherchée ALORS
+      			RENVOYER pclValeurCaractéristique.m_nIDValeurCaractéristique
+      		FIN
+      FIN
+      
+      
+      // par défaut, non trouvé
+      RENVOYER 0
+     type : 458752
+   -
+     name : GetValeurCaracteristiqueSelonNom
+     procedure_id : 1609332827177885225
+     type_code : 12
+     code : |1-
+      // Résumé :  Récupère la valeur une caractéristique selon son nom
+      // Paramètres :
+      //	sNomCaractéristiqueRecherchée (chaîne ANSI) :<indiquez ici le rôle de sNomCaractéristiqueRecherchée>
+      // Valeur de retour :
+      // 	chaîne ANSI : // 	Aucune
+      //
+      PROCÉDURE GetValeurCaracteristiqueSelonNom(sNomCaractéristiqueRecherchée est une chaîne)
+      
+      // Variables locales
+      nIndice 					est un entier
+      pclValeurCaractéristique 	est un CValeurCaracteristique dynamique
+      
+      // Parcours des caractéristiques
+      POUR nIndice = 1 _À_ m_tabCaracteristique..Occurrence
+      	
+      	// On se positionne sur la caractéristique
+      	pclValeurCaractéristique = m_tabCaracteristique[nIndice]
+      	
+      	// On la compare
+      	SI pclValeurCaractéristique.GetNomCaractéristique() ~=sNomCaractéristiqueRecherchée ALORS
+      		RENVOYER pclValeurCaractéristique.m_sValeur
+      	FIN
+      FIN
+      
+      
+      // par défaut, non trouvé
+      RENVOYER ""
+     type : 458752
+   -
+     name : GetPrixTTCFormaté
+     internal_properties : CAAAAAgAAAAt7Q8LvVPQa5hFwV5X01yUBjEtZbQj5xZVMISPtoO/tJIPd9ElzKtUHCZDH7HrOj2/RmruPTqxR1rSmfGDcA20uHg29a+QmVT/xOjIEGhvwEX2o04n36bZpFthsC1PzYQOUR+epsqMGyw1g8/Yh7g1UqybPYoi/fYcB5myK72VvGevmGGlE00UNiFAuNA3VrRMAx/W
+     procedure_id : 1609342465127373879
+     type_code : 12
+     code : |1+
+      // Résumé : Renvoie le prix TTC formaté sous forme de chaînee
+      
+      PROCÉDURE GetPrixTTCFormaté()
+      
+      // Variables locales
+      moPrix est un monétaire
+      
+      // On recherche les taxes
+      clTaxes est un CTauxTaxe = m_pclProduitAssocié.m_pclTauxTaxe
+      dbgAssertion(clTaxes<>Null,"Taxes non associées à ce produit")
+      
+      // On calcul le prix TTC
+      moPrix = m_moPUHT * (1+clTaxes.m_moTaux)
+      
+      // On renvoie la chaine formatée
+      RENVOYER NumériqueVersChaîne(moPrix,".2f")
+     type : 458752
+  properties :
+   -
+     name : PrixTTCFormatté
+     identifier : 0x15f2e8b504205da1
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCÉDURE PUBLIQUE PrixTTCFormatté()
+         RENVOYER MonétaireVersChaine(PrixTTC)
+        type : 1966080
+     template_refs : []
+   -
+     name : Libellé
+     identifier : 0x15f6d0580253393f
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCÉDURE PUBLIQUE Libellé()
+         
+         SI m_sLibelle<>"" ALORS
+         	RENVOYER m_sLibelle
+         FIN
+         
+         RENVOYER m_pclProduitAssocié.m_sLibellé
+        type : 1966080
+     template_refs : []
+   -
+     name : PhotoDéfaut
+     identifier : 0x15fa88cd0430b25c
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCÉDURE PUBLIQUE PhotoDéfaut() : CPhotoProduit
+         
+         RENVOYER pclTrouvePhoto(Photo_Defaut)
+        type : 1966080
+      -
+        code : |1+
+         PROCÉDURE PUBLIQUE PhotoDéfaut(Valeur)
+         
+         dbgAssertion(Faux,"Impossible de modifier la photo par défaut")
+        type : 2031616
+     template_refs : []
+   -
+     name : Description
+     identifier : 0x15fc296f03504069
+     type_code : 103
+     p_codes :
+      -
+        code : |1+
+         PROCÉDURE PUBLIQUE Description()
+         
+         SI PAS m_sDescription ~= "" ALORS
+         	RENVOYER m_sDescription
+         FIN
+         
+         RENVOYER m_pclProduitAssocié.m_sDescription
+        type : 1966080
+      -
+        code : |1+
+         PROCÉDURE PUBLIQUE Description(Valeur)
+         
+        type : 2031616
+     template_refs : []
+   -
+     name : PrixTTC
+     identifier : 0x164c761d06d809b1
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCÉDURE PUBLIQUE PrixTTC() : monétaire
+         RENVOYER m_moPUHT * (1+m_pclProduitAssocié.m_pclTauxTaxe.m_moTaux)
+        type : 1966080
+     template_refs : []
+   -
+     name : Caractéristiques
+     identifier : 0x164c96070ac4b299
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCÉDURE PUBLIQUE Caractéristiques()
+         RENVOYER m_tabCaracteristique
+        type : 1966080
+     template_refs : []
+   -
+     name : ProduitAssocié
+     identifier : 0x164c98720adc2481
+     type_code : 103
+     p_codes :
+      -
+        code : |1-
+         PROCÉDURE PUBLIQUE ProduitAssocié() : CProduit
+         RENVOYER m_pclProduitAssocié
+        type : 1966080
+      -
+        code : |1-
+         
+        type : 2031616
+     template_refs : []
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x1fce60bc005ccded
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

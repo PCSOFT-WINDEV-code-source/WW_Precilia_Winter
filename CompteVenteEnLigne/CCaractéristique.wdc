@@ -1,0 +1,110 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : CCaractéristique
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x15a904330254864d
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  type_code : 10
+  p_codes :
+   -
+     code : |1+
+      
+      CCaractéristique est une Classe
+      	m_nIDCaractéristique est un entier sur 8 <MAPPING="IDCaractéristique">
+      	m_sNom est une chaîne <MAPPING="NomCaractéristique">
+      	m_sDescription est une chaîne <MAPPING="Description">
+      	m_eTypeCaractéristique est une ENUM_TypeCaractéristique
+      	m_ValMin est une chaîne <MAPPING="ValMin">
+      	m_ValMax est une chaîne <MAPPING="ValMax">
+      	m_sUnite est une chaîne ANSI <MAPPING=Unite>
+      	
+      GLOBAL
+      	// Les caractéristiques sont toutes chargées en mémoire (elles sont normalement peu nombreuses)
+      	ms_gtaCaracteristique est un tableau associatif de CCaractéristique
+      FIN
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 1560783362989590093
+     type_code : 27
+     code : |1+
+      PROCÉDURE Constructeur()
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 1560783362989655629
+     type_code : 28
+     code : |1+
+      PROCÉDURE Destructeur()
+      
+     type : 655360
+   -
+     name : s_ChargeFichier
+     procedure_id : 1560790831938409183
+     type_code : 12
+     code : |1+
+      // Résumé : <indiquez ici ce que fait la procédure>
+      // Syntaxe :
+      //s_ChargeFichier ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCÉDURE PUBLIQUE GLOBALE s_ChargeFichier()
+      
+      SupprimeTout(ms_gtaCaracteristique)
+      
+      clCar est un CCaractéristique
+      POUR TOUT Caractéristique 
+      	FichierVersMémoire(clCar,Caractéristique)	
+      	ms_gtaCaracteristique[Caractéristique.IDCaractéristique] = clCar
+      FIN
+     type : 458752
+   -
+     name : ChargeInfo
+     procedure_id : 1581614624569967100
+     type_code : 12
+     code : |1+
+      // Résumé : <indiquez ici ce que fait la procédure>
+      // Syntaxe :
+      //ChargeInfo (<nIDCarac> est entier sur 8 octets)
+      //
+      // Paramètres :
+      //	nIDCarac (entier sur 8 octets) : <indiquez ici le rôle de nIDCarac>
+      // Valeur de retour :
+      // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCÉDURE ChargeInfo( nIDCarac est un entier sur 8 octets )
+      
+      HLitRecherchePremier(Caractéristique,IDCaractéristique,nIDCarac)
+      FichierVersMémoire(objet,Caractéristique)
+      
+      
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : Classe1
+resources :
+ string_res :
+  identifier : 0x1fce60bc006fcdfd
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ
